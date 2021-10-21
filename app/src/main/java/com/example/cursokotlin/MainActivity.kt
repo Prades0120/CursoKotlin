@@ -16,44 +16,39 @@ class MainActivity : AppCompatActivity() {
         val textNum = findViewById<TextView>(R.id.editTextNumberDecimal)
         val button = findViewById<Button>(R.id.button)
         val result1 = findViewById<TextView>(R.id.textView)
-        var quan1 = 0
-        var quan2 = 0
-        var quan3 = 0
         var total = 0
+        var account = -1
 
         button.text = "Introduce"
-        textNum.hint = "Still blank or 0 to finish"
+        textNum.hint = "Introduce a negative account to finish"
+
 
         button.setOnClickListener {
-            var num = 0.0
+            var num = -1
             try {
-                num = textNum.text.toString().toDouble()
+                num = textNum.text.toString().toInt()
             }catch (e: Exception){
             }
 
-            if (num != 0.0 ) {
-                when {
-                    num > 10.2 -> quan3++
-                    num >= 9.8 -> quan1++
-                    else -> quan2++
-                }
-                total++
-                result1.text = "Fit pieces: $quan1\n" +
-                        "Low weight pieces: $quan2\n" +
-                        "High weight pieces: $quan3\n" +
-                        "Total of pieces: $total"
+            if (account >= 0 ) {
+                textNum.hint = "Introduce an account"
+                if (num > 0 ){
+                    result1.text = "Credit balance"
+                    total+=num
+                }else if (num == 0 )
+                    result1.text = "Null balance"
+                else
+                    result1.text = "Debit balance"
+
+                account = -1
+            }else if (account<0 && num<0){
+                button.isVisible = false
+                textNum.isVisible = false
+                result1.text = "Total of balanced credits: $total"
             }else{
-                if (total == 0){
-                    result1.text = "ERROR...\nNOT WEIGHTS INTRODUCED"
-                }else {
-                    button.isVisible = false
-                    textNum.isVisible = false
-                    result1.text = "FINAL RESULT:\n\n" +
-                            "Fit pieces: $quan1\n" +
-                            "Low weight pieces: $quan2\n" +
-                            "High weight pieces: $quan3\n" +
-                            "Total of pieces: $total"
-                }
+                textNum.hint = "Introduce a balance value"
+                account = num
+                result1.text = ""
             }
             textNum.text = ""
         }
